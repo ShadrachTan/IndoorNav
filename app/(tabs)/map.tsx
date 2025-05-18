@@ -33,7 +33,7 @@ const maps: Record<string, MapData> = {
     gridData: require('../../assets/2ndFloor.json'),
     points: {
       start: { x: 30, y: 118 },
-      '2nd Floor - Building 2': { x: 43, y: 118 },
+      '3nd Floor - Building 2': { x: 43, y: 118 },
       "Women's CR": { x: 330, y: 29 },
       "Men's CR": { x: 30, y: 29 },
       'Room 2201': { x: 80, y: 30 },
@@ -53,7 +53,9 @@ const maps: Record<string, MapData> = {
     gridData: require('../../assets/3rdFloor.json'),
     points: {
       start: { x: 28, y: 118 },
-      '3rd Floor - Building 2': { x: 43, y: 20 },
+      '4th Floor - Building 2': { x: 43, y: 118 },
+      "Women's CR": { x: 330, y: 29 },
+      "Men's CR": { x: 30, y: 29 },
       'Room 2301': { x: 80, y: 30 },
       'Room 2302': { x: 134, y: 30 },
       'Room 2303': { x: 183, y: 30 },
@@ -71,6 +73,9 @@ const maps: Record<string, MapData> = {
     gridData: require('../../assets/4thFloor.json'),
     points: {
       start: { x: 25, y: 118 },
+      '5th Floor - Building 2': { x: 43, y: 118 },
+      "Women's CR": { x: 330, y: 29 },
+      "Men's CR": { x: 30, y: 29 },
       'Room 2401': { x: 80, y: 30 },
       'Room 2402': { x: 134, y: 30 },
       'Room 2403': { x: 183, y: 30 },
@@ -88,7 +93,9 @@ const maps: Record<string, MapData> = {
     image: require('../../assets/images/5th floor.jpg'),
     gridData: require('../../assets/5thFloor.json'),
     points: {
-      start: { x: 28, y: 118 },
+      start: { x: 28, y: 116 },
+      "Women's CR": { x: 330, y: 29 },
+      "Men's CR": { x: 30, y: 29 },
       'Room 2501': { x: 80, y: 30 },
       'Room 2502': { x: 134, y: 30 },
       'Room 2503': { x: 183, y: 30 },
