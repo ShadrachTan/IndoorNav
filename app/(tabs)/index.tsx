@@ -1,89 +1,138 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
+  Image,
+  ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 
 export default function HomeScreen() {
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const handleSearch = () => {
-    console.log('Searching for:', searchQuery);
-  };
+  const [userName, setUserName] = useState('');
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome to Indoor Navigation</Text>
+    <ImageBackground
+      source={require('../../assets/images/eac-bg.png')}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      <View style={styles.darkOverlay} />
 
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Search for a location..."
-        value={searchQuery}
-        onChangeText={(text) => setSearchQuery(text)}
-      />
-      <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
-        <Text style={styles.searchButtonText}>Search</Text>
-      </TouchableOpacity>
+      <View style={styles.header}>
+        <Image
+          source={require('../../assets/images/adaptive-icon.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+        <View>
+          <Text style={styles.headerText}>Indoor Navigation</Text>
+          <Text style={styles.subHeaderText}>EAC Cavite</Text>
+        </View>
+      </View>
 
-      <TouchableOpacity
-        style={styles.exploreButton}
-        onPress={() => console.log('Explore clicked')}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={styles.contentContainer}
       >
-        <Text style={styles.exploreButtonText}>Explore Locations</Text>
-      </TouchableOpacity>
-    </View>
+        <Text style={styles.title}>
+          {userName
+            ? `Welcome ${userName} to EAC Cavite Indoor Navigation`
+            : 'Welcome to EAC Cavite Indoor Navigation'}
+        </Text>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Enter your name"
+          placeholderTextColor="#ccc"
+          value={userName}
+          onChangeText={setUserName}
+          autoCapitalize="words"
+          returnKeyType="done"
+        />
+
+        <Text style={styles.instructions}>
+          To get started, go to Map and pick your location. The app will guide
+          you to your destination.
+        </Text>
+      </KeyboardAvoidingView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
+    flex: 1,
+  },
+  darkOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.25)',
+    zIndex: 1,
+  },
+  header: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+    paddingTop: 55,
+    backgroundColor: '#D32F2F',
+    zIndex: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  logo: {
+    width: 52,
+    height: 52,
+    marginRight: 12,
+  },
+  headerText: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#fff',
+    letterSpacing: 1,
+  },
+  subHeaderText: {
+    fontSize: 14,
+    color: '#FBE9E7',
+    marginTop: 2,
+  },
+  contentContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#f8f8f8',
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    zIndex: 2,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 26,
+    fontWeight: '800',
     marginBottom: 20,
-    color: '#333',
+    color: '#fff',
+    textAlign: 'center',
+    letterSpacing: 0.5,
   },
-  searchBar: {
-    width: '100%',
-    padding: 10,
-    marginBottom: 20,
+  input: {
+    width: '80%',
+    height: 45,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    fontSize: 18,
+    color: '#fff',
+    marginBottom: 25,
+    borderColor: '#fff',
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    backgroundColor: '#fff',
   },
-  searchButton: {
-    width: '100%',
-    padding: 12,
-    backgroundColor: '#4CAF50',
-    borderRadius: 5,
-    marginBottom: 15,
-    alignItems: 'center',
-  },
-  searchButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  exploreButton: {
-    width: '100%',
-    padding: 12,
-    backgroundColor: '#007BFF',
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  exploreButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+  instructions: {
+    fontSize: 17,
+    color: '#eee',
+    lineHeight: 24,
+    textAlign: 'center',
   },
 });

@@ -3,11 +3,17 @@ import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Svg, { Circle, Line } from 'react-native-svg';
 
-// Map configurations with corresponding JSON and points
-const maps = {
+type Point = { x: number; y: number };
+type MapData = {
+  image: any;
+  gridData: { layers: { data: number[] }[]; width: number; height: number };
+  points: Record<string, Point>;
+};
+
+const maps: Record<string, MapData> = {
   'Ground Floor': {
     image: require('../../assets/images/Ground floor 2.jpg'),
-    gridData: require('C:/React/IndoorNav/assets/GroundFloor2.json'),
+    gridData: require('../../assets/GroundFloor2.json'),
     points: {
       start: { x: 180, y: 155 },
       '2nd Floor - Building 2': { x: 37, y: 40 },
@@ -24,7 +30,7 @@ const maps = {
   },
   'Building 2 - 1st Floor': {
     image: require('../../assets/images/1st Floor.jpg'),
-    gridData: require('C:/React/IndoorNav/assets/1stFloor.json'),
+    gridData: require('../../assets/1stFloor.json'),
     points: {
       start: { x: 30, y: 118 },
       '3rd Floor - Building 2': { x: 43, y: 118 },
@@ -42,65 +48,7 @@ const maps = {
       'Room 10': { x: 288, y: 103 },
     },
   },
-  'Building 2 - 2nd Floor': {
-    image: require('../../assets/images/2nd Floor.jpg'),
-    gridData: require('C:/React/IndoorNav/assets/2ndFloor.json'),
-    points: {
-      start: { x: 28, y: 120 },
-      '3rd Floor - Building 2': { x: 42, y: 120 },
-      "Women's CR": { x: 330, y: 29 },
-      "Men's CR": { x: 30, y: 29 },
-      'Room 1': { x: 80, y: 30 },
-      'Room 2': { x: 134, y: 30 },
-      'Room 3': { x: 183, y: 30 },
-      'Room 4': { x: 235, y: 30 },
-      'Room 5': { x: 288, y: 30 },
-      'Room 6': { x: 80, y: 103 },
-      'Room 7': { x: 134, y: 103 },
-      'Room 8': { x: 183, y: 103 },
-      'Room 9': { x: 235, y: 103 },
-      'Room 10': { x: 288, y: 103 },
-    },
-  },
-  'Building 2 - 3rd Floor': {
-    image: require('../../assets/images/3rd Floor.jpg'),
-    gridData: require('C:/React/IndoorNav/assets/3rdFloor.json'),
-    points: {
-      start: { x: 25, y: 120 },
-      '4th Floor - Building 2': { x: 40, y: 120 },
-      "Women's CR": { x: 330, y: 29 },
-      "Men's CR": { x: 30, y: 29 },
-      'Room 1': { x: 80, y: 30 },
-      'Room 2': { x: 134, y: 30 },
-      'Room 3': { x: 183, y: 30 },
-      'Room 4': { x: 235, y: 30 },
-      'Room 5': { x: 288, y: 30 },
-      'Room 6': { x: 80, y: 103 },
-      'Room 7': { x: 134, y: 103 },
-      'Room 8': { x: 183, y: 103 },
-      'Room 9': { x: 235, y: 103 },
-      'Room 10': { x: 288, y: 103 },
-    },
-  },
-  'Building 2 - 4th Floor': {
-    image: require('../../assets/images/4th Floor.jpg'),
-    gridData: require('C:/React/IndoorNav/assets/4thFloor.json'),
-    points: {
-      start: { x: 30, y: 115 },
-      "Women's CR": { x: 330, y: 29 },
-      "Men's CR": { x: 30, y: 29 },
-      'Room 1': { x: 80, y: 30 },
-      'Room 2': { x: 134, y: 30 },
-      'Room 3': { x: 183, y: 30 },
-      'Room 4': { x: 235, y: 30 },
-      'Room 5': { x: 288, y: 30 },
-      'Room 6': { x: 80, y: 103 },
-      'Room 7': { x: 134, y: 103 },
-      'Room 8': { x: 183, y: 103 },
-      'Room 9': { x: 235, y: 103 },
-      'Room 10': { x: 288, y: 103 },
-    },
-  },
+  // ...add other floors as needed
 };
 
 const screenWidth = Dimensions.get('window').width;
@@ -109,8 +57,10 @@ const screenHeight = Dimensions.get('window').height;
 const Map = () => {
   const [floorOpen, setFloorOpen] = useState(false);
   const [destOpen, setDestOpen] = useState(false);
-  const [selectedFloor, setSelectedFloor] = useState('Ground Floor');
-  const [selectedDestination, setSelectedDestination] = useState(null);
+  const [selectedFloor, setSelectedFloor] = useState<string>('Ground Floor');
+  const [selectedDestination, setSelectedDestination] = useState<string | null>(
+    null
+  );
 
   const currentMap = maps[selectedFloor];
   const gridData = currentMap.gridData.layers[0];
@@ -125,7 +75,7 @@ const Map = () => {
   const offsetY = (screenHeight - gridPixelHeight) / 2;
 
   const drawRoute = () => {
-    if (!selectedDestination || !currentMap.points[selectedDestination])
+    if (!selectedDestination || !(selectedDestination in currentMap.points))
       return null;
 
     const points = currentMap.points;
@@ -134,8 +84,10 @@ const Map = () => {
     const destX = Math.floor(points[selectedDestination].x / tileSize);
     const destY = Math.floor(points[selectedDestination].y / tileSize);
 
-    const openSet = [{ x: startX, y: startY, cost: 0, path: [] }];
-    const closedSet = new Set();
+    const openSet = [
+      { x: startX, y: startY, cost: 0, path: [] as { x: number; y: number }[] },
+    ];
+    const closedSet = new Set<string>();
 
     while (openSet.length > 0) {
       openSet.sort((a, b) => a.cost - b.cost);
@@ -218,19 +170,20 @@ const Map = () => {
         resizeMode="contain"
       />
 
-      {/* Grid and Route Overlay */}
       <Svg style={StyleSheet.absoluteFill}>
         {drawRoute()}
-        {/* Render only the start point and the selected destination */}
         {Object.entries(currentMap.points).map(([key, point]) => {
+          const pt = point as Point;
           if (key === 'start' || key === selectedDestination) {
             return (
               <Circle
                 key={key}
-                cx={point.x + offsetX}
-                cy={point.y + offsetY}
-                r={3}
-                fill={key === 'start' ? 'red' : 'green'}
+                cx={pt.x + offsetX}
+                cy={pt.y + offsetY}
+                r={5}
+                fill={key === 'start' ? '#ef4444' : '#22c55e'} // red & green shades
+                stroke="#000"
+                strokeWidth={1}
               />
             );
           }
@@ -238,51 +191,95 @@ const Map = () => {
         })}
       </Svg>
 
-      {/* Dropdowns */}
       <View style={styles.dropdownContainer}>
-        <DropDownPicker
-          open={floorOpen}
-          value={selectedFloor}
-          items={Object.keys(maps).map((floor) => ({
-            label: floor,
-            value: floor,
-          }))}
-          setOpen={setFloorOpen}
-          setValue={setSelectedFloor}
-          onChangeValue={(value) => {
-            setSelectedFloor(value);
-            setSelectedDestination(null); // Reset destination on floor change
-          }}
-          style={styles.dropdown}
-        />
-        <DropDownPicker
-          open={destOpen}
-          value={selectedDestination}
-          items={Object.keys(currentMap.points)
-            .filter((point) => point !== 'start')
-            .map((point) => ({ label: point, value: point }))}
-          setOpen={setDestOpen}
-          setValue={setSelectedDestination}
-          onChangeValue={(value) => setSelectedDestination(value)}
-          style={styles.dropdown}
-        />
+        <View style={styles.floorDropdownWrapper}>
+          <DropDownPicker
+            open={floorOpen}
+            value={selectedFloor}
+            items={Object.keys(maps).map((floor) => ({
+              label: floor,
+              value: floor,
+            }))}
+            setOpen={setFloorOpen}
+            setValue={(callbackOrValue) => {
+              if (typeof callbackOrValue === 'function') {
+                setSelectedFloor(callbackOrValue(selectedFloor));
+              } else {
+                setSelectedFloor(callbackOrValue);
+              }
+              setSelectedDestination(null);
+            }}
+            onChangeValue={(value) => {
+              if (value) {
+                setSelectedFloor(value);
+                setSelectedDestination(null);
+              }
+            }}
+            style={styles.dropdown}
+            dropDownContainerStyle={styles.dropDownContainer}
+            listItemLabelStyle={{ color: '#1e40af' }}
+            placeholder="Select Floor"
+            textStyle={{ color: '#1e40af' }}
+          />
+        </View>
+
+        <View style={styles.destDropdownWrapper}>
+          <DropDownPicker
+            open={destOpen}
+            value={selectedDestination}
+            items={Object.keys(currentMap.points)
+              .filter((point) => point !== 'start')
+              .map((point) => ({ label: point, value: point }))}
+            setOpen={setDestOpen}
+            setValue={(callbackOrValue) => {
+              if (typeof callbackOrValue === 'function') {
+                setSelectedDestination(callbackOrValue(selectedDestination));
+              } else {
+                setSelectedDestination(callbackOrValue);
+              }
+            }}
+            onChangeValue={(value) => {
+              setSelectedDestination(value);
+            }}
+            style={styles.dropdown}
+            dropDownContainerStyle={styles.dropDownContainer}
+            listItemLabelStyle={{ color: '#1e40af' }}
+            placeholder="Select Destination"
+            textStyle={{ color: '#1e40af' }}
+            searchable={true}
+          />
+        </View>
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff', position: 'relative' },
+  container: { flex: 1, backgroundColor: '#fefefe', position: 'relative' },
   mapImage: { position: 'absolute' },
   dropdownContainer: {
     position: 'absolute',
-    bottom: 20,
-    width: '90%',
-    alignSelf: 'center',
+    top: 40,
+    left: 20,
+    right: 20,
+  },
+  floorDropdownWrapper: {
+    zIndex: 2000,
+    marginBottom: 15,
+  },
+  destDropdownWrapper: {
+    zIndex: 1000,
   },
   dropdown: {
-    backgroundColor: '#fafafa',
-    borderColor: '#ddd',
+    borderColor: '#3b82f6',
+    borderRadius: 8,
+    backgroundColor: '#dbeafe',
+    height: 45,
+  },
+  dropDownContainer: {
+    borderColor: '#3b82f6',
+    borderRadius: 8,
+    backgroundColor: '#dbeafe',
   },
 });
 
