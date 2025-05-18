@@ -28,27 +28,79 @@ const maps: Record<string, MapData> = {
       Office: { x: 67, y: 47 },
     },
   },
-  'Building 2 - 1st Floor': {
-    image: require('../../assets/images/1st Floor.jpg'),
-    gridData: require('../../assets/1stFloor.json'),
+  '2nd Floor - Building 2': {
+    image: require('../../assets/images/2nd floor.jpg'),
+    gridData: require('../../assets/2ndFloor.json'),
     points: {
       start: { x: 30, y: 118 },
-      '3rd Floor - Building 2': { x: 43, y: 118 },
+      '2nd Floor - Building 2': { x: 43, y: 118 },
       "Women's CR": { x: 330, y: 29 },
       "Men's CR": { x: 30, y: 29 },
-      'Room 1': { x: 80, y: 30 },
-      'Room 2': { x: 134, y: 30 },
-      'Room 3': { x: 183, y: 30 },
-      'Room 4': { x: 235, y: 30 },
-      'Room 5': { x: 288, y: 30 },
-      'Room 6': { x: 80, y: 103 },
-      'Room 7': { x: 134, y: 103 },
-      'Room 8': { x: 183, y: 103 },
-      'Room 9': { x: 235, y: 103 },
-      'Room 10': { x: 288, y: 103 },
+      'Room 2201': { x: 80, y: 30 },
+      'Room 2202': { x: 134, y: 30 },
+      'Room 2203': { x: 183, y: 30 },
+      'Room 2204': { x: 235, y: 30 },
+      'Room 2205': { x: 288, y: 30 },
+      'Room 2206': { x: 80, y: 103 },
+      'Room 2207': { x: 134, y: 103 },
+      'Room 2208': { x: 183, y: 103 },
+      'Room 2209': { x: 235, y: 103 },
+      'Room 2210': { x: 288, y: 103 },
     },
   },
-  // ...add other floors as needed
+  '3rd Floor - Building 2': {
+    image: require('../../assets/images/3rd floor.jpg'),
+    gridData: require('../../assets/3rdFloor.json'),
+    points: {
+      start: { x: 43, y: 118 },
+      '3rd Floor - Building 2': { x: 43, y: 20 },
+      'Room 2301': { x: 80, y: 30 },
+      'Room 2302': { x: 134, y: 30 },
+      'Room 2303': { x: 183, y: 30 },
+      'Room 2304': { x: 235, y: 30 },
+      'Room 2305': { x: 288, y: 30 },
+      'Room 2306': { x: 80, y: 103 },
+      'Room 2307': { x: 134, y: 103 },
+      'Room 2308': { x: 183, y: 103 },
+      'Room 2309': { x: 235, y: 103 },
+      'Room 2310': { x: 288, y: 103 },
+    },
+  },
+  '4th Floor - Building 2': {
+    image: require('../../assets/images/4th floor.jpg'),
+    gridData: require('../../assets/4thFloor.json'),
+    points: {
+      start: { x: 43, y: 20 },
+      'Room 2401': { x: 80, y: 30 },
+      'Room 2402': { x: 134, y: 30 },
+      'Room 2403': { x: 183, y: 30 },
+      'Room 2404': { x: 235, y: 30 },
+      'Room 2405': { x: 288, y: 30 },
+      'Room 2406': { x: 80, y: 103 },
+      'Room 2407': { x: 134, y: 103 },
+      'Room 2408': { x: 183, y: 103 },
+      'Room 2409': { x: 235, y: 103 },
+      'Room 2410': { x: 288, y: 103 },
+    },
+  },
+
+  '5th Floor - Building 2': {
+    image: require('../../assets/images/5th floor.jpg'),
+    gridData: require('../../assets/5thFloor.json'),
+    points: {
+      start: { x: 43, y: 20 },
+      'Room 2501': { x: 80, y: 30 },
+      'Room 2502': { x: 134, y: 30 },
+      'Room 2503': { x: 183, y: 30 },
+      'Room 2504': { x: 235, y: 30 },
+      'Room 2505': { x: 288, y: 30 },
+      'Room 2506': { x: 80, y: 103 },
+      'Room 2507': { x: 134, y: 103 },
+      'Room 2508': { x: 183, y: 103 },
+      'Room 2509': { x: 235, y: 103 },
+      'Room 2510': { x: 288, y: 103 },
+    },
+  },
 };
 
 const screenWidth = Dimensions.get('window').width;
@@ -96,9 +148,9 @@ const Map = () => {
 
       if (current.x === destX && current.y === destY) {
         const route = current.path.concat({ x: destX, y: destY });
-
         return route.map((point, idx) => {
           if (idx === route.length - 1) return null;
+
           const start = {
             x: route[idx].x * tileSize + tileSize / 2 + offsetX,
             y: route[idx].y * tileSize + tileSize / 2 + offsetY,
@@ -107,6 +159,7 @@ const Map = () => {
             x: route[idx + 1].x * tileSize + tileSize / 2 + offsetX,
             y: route[idx + 1].y * tileSize + tileSize / 2 + offsetY,
           };
+
           return (
             <Line
               key={`line-${idx}`}
@@ -138,7 +191,7 @@ const Map = () => {
           neighbor.x < gridWidth &&
           neighbor.y >= 0 &&
           neighbor.y < gridHeight &&
-          grid[neighbor.y * gridWidth + neighbor.x] === 1 // Walkable
+          grid[neighbor.y * gridWidth + neighbor.x] === 1
         ) {
           openSet.push({
             x: neighbor.x,
@@ -155,33 +208,29 @@ const Map = () => {
 
   return (
     <View style={styles.container}>
-      {/* Map Image */}
       <Image
         source={currentMap.image}
-        style={[
-          styles.mapImage,
-          {
-            width: gridPixelWidth,
-            height: gridPixelHeight,
-            top: offsetY,
-            left: offsetX,
-          },
-        ]}
+        style={{
+          position: 'absolute',
+          width: gridPixelWidth,
+          height: gridPixelHeight,
+          top: offsetY,
+          left: offsetX,
+        }}
         resizeMode="contain"
       />
 
       <Svg style={StyleSheet.absoluteFill}>
         {drawRoute()}
         {Object.entries(currentMap.points).map(([key, point]) => {
-          const pt = point as Point;
           if (key === 'start' || key === selectedDestination) {
             return (
               <Circle
                 key={key}
-                cx={pt.x + offsetX}
-                cy={pt.y + offsetY}
+                cx={point.x + offsetX}
+                cy={point.y + offsetY}
                 r={5}
-                fill={key === 'start' ? '#ef4444' : '#22c55e'} // red & green shades
+                fill={key === 'start' ? '#ef4444' : '#22c55e'}
                 stroke="#000"
                 strokeWidth={1}
               />
@@ -201,23 +250,14 @@ const Map = () => {
               value: floor,
             }))}
             setOpen={setFloorOpen}
-            setValue={(callbackOrValue) => {
-              if (typeof callbackOrValue === 'function') {
-                setSelectedFloor(callbackOrValue(selectedFloor));
-              } else {
-                setSelectedFloor(callbackOrValue);
-              }
+            setValue={(val) => {
+              setSelectedFloor(
+                typeof val === 'function' ? val(selectedFloor) : val
+              );
               setSelectedDestination(null);
-            }}
-            onChangeValue={(value) => {
-              if (value) {
-                setSelectedFloor(value);
-                setSelectedDestination(null);
-              }
             }}
             style={styles.dropdown}
             dropDownContainerStyle={styles.dropDownContainer}
-            listItemLabelStyle={{ color: '#1e40af' }}
             placeholder="Select Floor"
             textStyle={{ color: '#1e40af' }}
           />
@@ -228,25 +268,19 @@ const Map = () => {
             open={destOpen}
             value={selectedDestination}
             items={Object.keys(currentMap.points)
-              .filter((point) => point !== 'start')
-              .map((point) => ({ label: point, value: point }))}
+              .filter((p) => p !== 'start')
+              .map((p) => ({ label: p, value: p }))}
             setOpen={setDestOpen}
-            setValue={(callbackOrValue) => {
-              if (typeof callbackOrValue === 'function') {
-                setSelectedDestination(callbackOrValue(selectedDestination));
-              } else {
-                setSelectedDestination(callbackOrValue);
-              }
-            }}
-            onChangeValue={(value) => {
-              setSelectedDestination(value);
-            }}
+            setValue={(val) =>
+              setSelectedDestination(
+                typeof val === 'function' ? val(selectedDestination) : val
+              )
+            }
+            searchable={true}
             style={styles.dropdown}
             dropDownContainerStyle={styles.dropDownContainer}
-            listItemLabelStyle={{ color: '#1e40af' }}
             placeholder="Select Destination"
             textStyle={{ color: '#1e40af' }}
-            searchable={true}
           />
         </View>
       </View>
@@ -255,8 +289,7 @@ const Map = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fefefe', position: 'relative' },
-  mapImage: { position: 'absolute' },
+  container: { flex: 1, backgroundColor: '#fefefe' },
   dropdownContainer: {
     position: 'absolute',
     top: 40,
