@@ -52,7 +52,7 @@ const maps: Record<string, MapData> = {
     image: require('../../assets/images/3rd floor.jpg'),
     gridData: require('../../assets/3rdFloor.json'),
     points: {
-      start: { x: 43, y: 118 },
+      start: { x: 28, y: 118 },
       '3rd Floor - Building 2': { x: 43, y: 20 },
       'Room 2301': { x: 80, y: 30 },
       'Room 2302': { x: 134, y: 30 },
@@ -70,7 +70,7 @@ const maps: Record<string, MapData> = {
     image: require('../../assets/images/4th floor.jpg'),
     gridData: require('../../assets/4thFloor.json'),
     points: {
-      start: { x: 43, y: 20 },
+      start: { x: 25, y: 118 },
       'Room 2401': { x: 80, y: 30 },
       'Room 2402': { x: 134, y: 30 },
       'Room 2403': { x: 183, y: 30 },
@@ -88,7 +88,7 @@ const maps: Record<string, MapData> = {
     image: require('../../assets/images/5th floor.jpg'),
     gridData: require('../../assets/5thFloor.json'),
     points: {
-      start: { x: 43, y: 20 },
+      start: { x: 28, y: 118 },
       'Room 2501': { x: 80, y: 30 },
       'Room 2502': { x: 134, y: 30 },
       'Room 2503': { x: 183, y: 30 },
